@@ -1,0 +1,14 @@
+.home-page {
+  padding: 50px 50px;
+  text-align: center;
+}
+
+.home-page .home-btns {
+  margin-bottom: 20px;
+}
+
+.home-page .home-btns .buttons {
+  width: 200px;
+  margin: 30px auto;
+  padding: 20px;
+}

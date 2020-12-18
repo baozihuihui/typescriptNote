@@ -1,0 +1,3 @@
+1、安装搭建基础环境
+$ npm init -y  创建package.json   文件
+$ tsc --init   创建 tsconfig.json 文件
