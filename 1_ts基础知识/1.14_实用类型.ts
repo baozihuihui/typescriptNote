@@ -12,10 +12,14 @@
  * ! Omit<T, Keys extends keyof T> -- 从 T 中去除 key 中 对应名称的属性
  * ! Parameters<T entends Function> -- 获取 函数类型T的 入参 对应类型构成的元组
  * ! ConstructorParameters<T extends new ()=>any > -- 获取 构造函数类型中(简单理解 class的constructor) 入参 对应类型构成的元组
- * ! Required<T>  -- 类型 T 中 所有属性变为 必填
- * ! ThisParameterType<T entends Function> --  提取函数类型的this参数的类型，如果函数类型没有this参数，则提取此参数的类型。
- * ?! OmitThisParameter<T entends Function> --
- * ?! ThisType<Type> --
+ * ! Required<T> -- 类型 T 中 所有属性变为 必填
+ * ! ThisParameterType<T entends Function> -- 提取函数类型 this参数的类型，如果函数类型没有this参数，则提取此参数的类型(unknow)。
+ * ! OmitThisParameter<T entends Function> -- 移除函数类型中 this参数的类型后返回函数类型，
+ * !                                          如果函数类型没有显示声明 this参数，则新建没有this参数的新函数类型。
+ * ! ThisType<T> -- 必须启用 --noImplicitThis 标志才能使用此实用程序
+ * !                该程序不返回转换后类型，只相当于上下文的标记
+ * !                ThisType <T>标记接口只是在lib.d.ts中声明的一个空接口。
+ * !                除了在对象文字的上下文类型中识别外，该接口的作用类似于任何空接口。
  **/
 
 type TypeBase = "a" | "b" | "c" | "d";
@@ -28,8 +32,12 @@ function f1(s: string) {
   return { a: 1, b: s };
 }
 
-function toHex(this: Number) {
+function f2(this: Number) {
   return this.toString(16);
+}
+
+function f3<T>(value: T): T {
+  return value;
 }
 
 class C {
@@ -94,13 +102,39 @@ type T_Required = Required<InterfaceBase>;
 const T_Required_user: T_Required = {
   name: "FattyCat",
   age: 1,
-  address: "xxx",
-}; // address change to requires
+  address: "xxx", // address change to requires
+};
 
-function numberToString(n: ThisParameterType<typeof toHex>) {
-  return toHex.apply(n);
+type T_ThisParameterType = ThisParameterType<typeof f1>;
+type T_ThisParameterType_2 = ThisParameterType<typeof f2>;
+
+type T_OmitThisParameter = OmitThisParameter<typeof f1>;
+type T_OmitThisParameter_2 = OmitThisParameter<typeof f2>;
+type T_OmitThisParameter_3 = OmitThisParameter<typeof f3>;
+
+type T_ThisType<D, M> = {
+  data?: D;
+  // 这里只能通过ThisType 表示 method自己包含一个上下文的this ，能指向 data 对应 D类型
+  method?: M & ThisType<M & D>;
+};
+
+function maekObject<D, M>(desc: T_ThisType<D, M>): D & M {
+  let data: object = desc.data || {};
+  let method: object = desc.method || {};
+  return { ...data, ...method } as D & M;
 }
 
-const fiveToHex: OmitThisParameter<typeof toHex> = toHex.bind(5);
+const obj = maekObject({
+  data: { x: 0, y: 0 },
+  method: {
+    moveBy(dx: number, dy: number) {
+      this.x += dx;
+      this.y += dy;
+      return this.x + this.y;
+    },
+  },
+});
 
-console.log(fiveToHex());
+console.log(obj.x); // 0
+console.log(obj.y); // 0
+console.log(obj.moveBy(5, 5)); // 10
