@@ -18,7 +18,7 @@ interface ClockConstructor {
   new (hour: number, minute: number): ClockInterface;
 }
 interface ClockInterface {
-  tick();
+  tick(): void;
 }
 
 function createClock(

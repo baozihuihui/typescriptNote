@@ -1,6 +1,6 @@
 /**
  * ? T｜ U 表示类型(interface 或是 typeof class|Function)。keys 指字面量(如下面的 TypeBase，或者是 keyof T)
- * ! Exclude<Keys1, Keys2> -- 从 Keys1 中剔除可以赋值给 Keys1 的类型，并返回剩下的。
+ * ! Exclude<Keys1, Keys2> -- 从 Keys1 中剔除可以赋值给 Keys2 的类型，并返回剩下的。
  * ! Extract<Keys1, Keys2> -- 获取 T 中可以赋值给 U 的类型。
  * ! NonNullable<Keys> -- 从 T 中剔除 null 和 undefined，并返回剩下的。
  * ! ReturnType<T entends Function> -- 获取 函数返回值 对应 类型。
