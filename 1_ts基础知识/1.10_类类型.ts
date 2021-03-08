@@ -2,7 +2,7 @@
 //   new (hour: number, minute: number);
 // }
 
-// 类的实现不能包含有 constrictor的部分，因为构造器数据静态类型，会在检查中跳过，导致缺少一个new的实例部分的实现
+// 类的实现不能包含有 constructor的部分，因为构造器数据静态类型，会在检查中跳过，导致缺少一个new的实例部分的实现
 // class Clock implements ClockConstructor {
 //   currentTime: Date;
 //   constructor(h: number, m: number) {}
@@ -36,7 +36,7 @@ class DigitalClock implements ClockInterface {
   }
 }
 class AnalogClock implements ClockInterface {
-  constructor(h: number, m: number) {}
+  constructor(public h: number, m: number) {}
   tick() {
     console.log("tick tock");
   }
