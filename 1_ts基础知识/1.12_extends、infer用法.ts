@@ -18,7 +18,7 @@ type NumberEqualsToNumber = IsEqualType<number, number>; // true
 
 // !infer 表示在 extends 条件语句中待推断的类型变量(对推断变量的重命名)
 // ? infer P 表示待推断的函数参数，
-// ? 如果 T 能赋值给(param : infer p) => any, 则结果是(param: infer P) => any类型中的参数 P,否则为T
+// ? 如果 T 是否继承自 (param : infer p) => any,(T 是否是一个函数) 若 T是一个函数，则类型取函数中参数的类型 P ，否则取类型 T
 // ! 注意 这里的 T 是一个函数类型 有能推断的可能性，如果是普通类型就没有了
 
 type ParamType<T> = T extends (param: infer p) => any ? p : T;
@@ -40,5 +40,5 @@ type Func = (user: INealyang) => void;
 
 type T_ParamType_1 = ParamType<Func>; // Param = INealyang
 type T_ParamType_2 = ParamType<INealyang2>; // Param = INealyang
-type T_ParamType_4 = ParamType<Nealyang3>; // Param = INealyang
+type T_ParamType_4 = ParamType<Nealyang3>; // Param = INealyang3 这里是因为 Nealyang3 是一个类，
 type T_ParamType_5 = ParamType<string>; // string
